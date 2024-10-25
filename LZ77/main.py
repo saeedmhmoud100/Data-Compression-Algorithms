@@ -31,22 +31,20 @@ class LZ77:
         index = i
         end = min(index + self.look_ahead, len(data) - 1)
         max_start = max(index - self.window_size, 0)
+
         search_window = data[max_start:index]
         string_ahead = data[index]
-        if index == 0:
-            return False
 
-        while search_window.rfind(string_ahead) != -1:
-            if index >= end:
+        while True:
+            new_string_ahead = string_ahead + data[index]
+            if index >= end or search_window.rfind(new_string_ahead) == -1:
                 break
             index += 1
-            string_ahead += data[index]
+            string_ahead = new_string_ahead
 
-        string_ahead = string_ahead[0:len(string_ahead) - 1]
-        position = 0
         if search_window.rfind(string_ahead) != -1:
             position = i - search_window.rfind(string_ahead)
-        return position, 0 if search_window.rfind(string_ahead) == -1 else len(string_ahead)
+            return position, len(string_ahead)
 
 
 def main():
@@ -71,5 +69,3 @@ if __name__ == '__main__':
 #     if length > best_length:
 #         best_offset = i + 1 - offset
 #         best_length = length
-
-
