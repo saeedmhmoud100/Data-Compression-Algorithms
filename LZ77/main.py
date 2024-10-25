@@ -1,7 +1,26 @@
+import re
+
+
 class LZ77:
     def __init__(self, window_size, buffer_size):
         self.window_size = window_size
         self.look_ahead = buffer_size
+    def compress_file(self,input_file='input.txt',output_file='output.txt'):
+        compressed_data = self.compress(open(input_file).read())
+        with open(output_file, 'w') as f:
+            for (offset, length, char) in compressed_data:
+                f.write(f'({offset},{length},{char})')
+
+
+    def decompress_file(self,input_file='output.txt',output_file='output2.txt'):
+        res = ""
+        with open(input_file) as f:
+            for line in f:
+                pattern = re.compile(r'\((\d+),(\d+),(.)\)')
+                tuples = [(int(offset), int(length), char) for offset, length, char in pattern.findall(line)]
+                res = self.decompress(tuples)
+        with open(output_file, 'w') as f:
+            f.write(res)
 
     def compress(self, data):
         compressed_data = []
@@ -51,11 +70,13 @@ def main():
     window_size = 20
     buffer_size = 5
     lz77 = LZ77(window_size, buffer_size)
-    data = 'abracadabra'
-    compressed_data = lz77.compress(data)
-    print(compressed_data)
-    decompressed_data = lz77.decompress(compressed_data)
-    print(decompressed_data)
+    # data = 'abracadabra'
+    # compressed_data = lz77.compress(data)
+    # print(compressed_data)
+    # decompressed_data = lz77.decompress(compressed_data)
+    # print(decompressed_data)
+    lz77.compress_file()
+    lz77.decompress_file()
 
 
 if __name__ == '__main__':
