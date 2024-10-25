@@ -42,9 +42,9 @@ class LZ77:
             index += 1
             string_ahead = new_string_ahead
 
-        if search_window.rfind(string_ahead) != -1:
-            position = i - search_window.rfind(string_ahead)
-            return position, len(string_ahead)
+        position = search_window.rfind(string_ahead)
+        if position != -1:
+            return i - position, len(string_ahead)
 
 
 def main():
