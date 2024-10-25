@@ -53,6 +53,7 @@ class LZ77:
 
         search_window = data[max_start:index]
         string_ahead = data[index]
+        index+=1
 
         while True:
             new_string_ahead = string_ahead + data[index]
@@ -67,8 +68,8 @@ class LZ77:
 
 
 def main():
-    window_size = 20
-    buffer_size = 5
+    window_size = 30
+    buffer_size = 10
     lz77 = LZ77(window_size, buffer_size)
     # data = 'abracadabra'
     # compressed_data = lz77.compress(data)
