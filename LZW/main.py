@@ -51,38 +51,33 @@ def decompressed(compressedData):
         if compressedData[i]<128:
             data+=chr(compressedData[i])
             if i!=0 and compressedData[i-1]<128:
-                if data[index-1:1+index]not in listOfCode.values()  :
-                    listOfCode[keyOfListCode] = data[index-1:1+index]
-                    keyOfListCode+=1
+                listOfCode,keyOfListCode=compare(data,listOfCode,keyOfListCode,index-1,index+1)
             elif i!=0:
-                if data[index-len(listOfCode[compressedData[i-1]]):1+index]not in listOfCode.values()  :
-                    listOfCode[keyOfListCode] = data[index-len(listOfCode[compressedData[i-1]]):1+index]
-                    keyOfListCode+=1
+                listOfCode,keyOfListCode=compare(data,listOfCode,keyOfListCode,index-len(listOfCode[compressedData[i-1]]),index+1)
 
         elif compressedData[i] not in listOfCode.keys():
             if compressedData[i-1]<128:
                 data+=chr(compressedData[i-1])+chr(compressedData[i-1])
-                if data[index - 1:1 + index] not in listOfCode.values() :
-                    listOfCode[keyOfListCode] = data[index - 1:index + 1]
-                    keyOfListCode+=1
+                listOfCode,keyOfListCode=compare(data,listOfCode,keyOfListCode,index - 1,index + 1)
             else:
                 data+=listOfCode[compressedData[i-1]]+listOfCode[compressedData[i-1]][0]
-                if data[index - (len(listOfCode[compressedData[i-1]])):index + 1] not in listOfCode.values() :
-
-                    listOfCode[keyOfListCode] = data[index - (len(listOfCode[compressedData[i-1]])):index + 1]
-                    keyOfListCode+=1
+                listOfCode,keyOfListCode=compare(data,listOfCode,keyOfListCode,index - len(listOfCode[compressedData[i-1]]),index+1)
         else:
             data+=listOfCode[compressedData[i]]
             if compressedData[i-1]<128:
-                if data[index-1:index+1] not in listOfCode.values()  :
-                    listOfCode[keyOfListCode]=data[index-1:index+1]
-                    keyOfListCode += 1
+                listOfCode,keyOfListCode=compare(data,listOfCode,keyOfListCode,index-1,index+1)
             else:
-                if data[index-len(listOfCode[compressedData[i-1]]):index+1] not in listOfCode.values() :
-                    listOfCode[keyOfListCode]=data[index-(len(listOfCode[compressedData[i-1]])):index+1]
-                    keyOfListCode += 1
+                listOfCode,keyOfListCode=compare(data,listOfCode,keyOfListCode,index-len(listOfCode[compressedData[i-1]]),index+1)
 
         i+=1
     return data
+def compare(data,listOfCode,keyOfListCode,start,end):
+    if data[start:end] not in listOfCode.values():
+        listOfCode[keyOfListCode] = data[start:end]
+        keyOfListCode+=1
+    return listOfCode,keyOfListCode
+
+
 # print(compressed("sobhi mohamed sobhi"))
-print(decompressed([115, 111, 98, 104, 105, 32, 109, 111, 104, 97, 109, 101, 100, 32, 128, 130, 105]))
+# [115, 111, 98, 104, 105, 32, 109, 111, 104, 97, 109, 101, 100, 32, 128, 130, 105]
+print(decompressed([65, 66, 65, 128, 128, 129, 131, 134, 130, 129, 66, 138, 139, 138]))
